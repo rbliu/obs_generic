@@ -3,7 +3,6 @@
 Things We would Like obs_generic to do, but are hard with current packages:
 
 ## Simulated images:
-------
 
 * Read in images with arbitrary footprint (within limits, but NXM basically)
 
@@ -15,7 +14,6 @@ Things We would Like obs_generic to do, but are hard with current packages:
 
 
 ## Outside-Processed data
-------
 
 * Read in pixel-level corrected images (i.e. bias, flats, non-linearity, cross-talk, BFE have been corrected already)
 
@@ -29,14 +27,14 @@ Things We would Like obs_generic to do, but are hard with current packages:
 
 
 ## DM-Stack Processed Data
-------
+
 * Run multi-band processing on coadds from images from different cameras
 
 * Run exposure-level forced photometry on images from different cameras
 
 
 ## Tasks
-------
+
 * Straightforward renaming
 
 * What fields should go in registry (and which are required vs optional): visit, sensor, source, filter,date/time,
