@@ -34,11 +34,11 @@ import lsst.pex.policy as pexPolicy
 # Solely to get boost serialization registrations for Measurement subclasses
 import lsst.meas.algorithms  # flake8: noqa
 
-class MegacamMapper(CameraMapper):
-    packageName = "obs_cfht"
+class GenericMapper(CameraMapper):
+    packageName = "obs_generic"
 
     def __init__(self, **kwargs):
-        policyFile = pexPolicy.DefaultPolicyFile("obs_cfht", "MegacamMapper.paf", "policy")
+        policyFile = pexPolicy.DefaultPolicyFile("obs_cfht", "GenericMapper.paf", "policy")
         policy = pexPolicy.Policy(policyFile)
         super(MegacamMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
 
