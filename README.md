@@ -1,6 +1,6 @@
 # obs_generic
 
-Things We would Like obs_generic to do, but are hard with current packages:
+Things we would Like obs_generic to do, but are hard with current packages:
 
 ## Simulated images:
 
@@ -10,7 +10,7 @@ Things We would Like obs_generic to do, but are hard with current packages:
 
 * Perform psf mapping(?), source detection, deblending, shape measurement as if the sim is a coadd, but without having to go through multiband (at the moment we pretend identical instances are different filters).
 
-* Notes to selves:  as  process, using obs_file is preferable.  We might get away with not having any stack/multiband, and getting the shapes out of something like processCCD?
+* *Notes to selves: as process, using obs_file is preferable. We might get away with not having any stack/multiband, and getting the shapes out of something like processCCD?*
 
 
 ## Outside-Processed data
@@ -37,7 +37,7 @@ Things We would Like obs_generic to do, but are hard with current packages:
 
 * Straightforward renaming
 
-* What fields should go in registry (and which are required vs optional): visit, sensor, source, filter,date/time,
+* What fields should go in registry (and which are required vs optional): visit, sensor, source, filter, date/time,
 
 * Function to add something to registry
 
