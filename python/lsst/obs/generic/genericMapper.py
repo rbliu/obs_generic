@@ -20,6 +20,7 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
+# This file was originally copied from obs_cfht.
 import os
 
 import pyfits
@@ -38,9 +39,9 @@ class GenericMapper(CameraMapper):
     packageName = "obs_generic"
 
     def __init__(self, **kwargs):
-        policyFile = pexPolicy.DefaultPolicyFile("obs_cfht", "GenericMapper.paf", "policy")
+        policyFile = pexPolicy.DefaultPolicyFile("obs_generic", "GenericMapper.paf", "policy")
         policy = pexPolicy.Policy(policyFile)
-        super(MegacamMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
+        super(GenericMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
 
         # The "ccd" provided by the user is translated through the registry into an extension name for the "raw"
         # template.  The template therefore doesn't include "ccd", so we need to ensure it's explicitly included
@@ -48,12 +49,12 @@ class GenericMapper(CameraMapper):
 
         self.exposures['raw'].keyDict['ccd'] = int
 
-        afwImageUtils.defineFilter('u',  lambdaEff=350, alias="u.MP9301")
-        afwImageUtils.defineFilter('g',  lambdaEff=450, alias="g.MP9401")
-        afwImageUtils.defineFilter('r',  lambdaEff=600, alias="r.MP9601")
-        afwImageUtils.defineFilter('i',  lambdaEff=750, alias="i.MP9701")
-        afwImageUtils.defineFilter('i2', lambdaEff=750, alias="i.MP9702")
-        afwImageUtils.defineFilter('z',  lambdaEff=900, alias="z.MP9801")
+        afwImageUtils.defineFilter('u',  lambdaEff=350)
+        afwImageUtils.defineFilter('g',  lambdaEff=450)
+        afwImageUtils.defineFilter('r',  lambdaEff=600)
+        afwImageUtils.defineFilter('i',  lambdaEff=750)
+        afwImageUtils.defineFilter('i2', lambdaEff=750)
+        afwImageUtils.defineFilter('z',  lambdaEff=900)
 
         # define filters?
         self.filterIdMap = dict(u=0, g=1, r=2, i=3, z=4, i2=5)
