@@ -133,7 +133,7 @@ class GenericMapper(CameraMapper):
         pathId = self._transformId(dataId)
         visit = long(pathId['visit'])
         ccd = long(pathId['ccd'])
-        return visit * 36 + ccd  # TODO: need to be modified?
+        return visit * 36 + ccd  # TODO: need to be modified!
 
     def bypass_ccdExposureId(self, datasetType, pythonType, location, dataId):
         """Hook to retrieve identifier for CCD"""
@@ -200,18 +200,6 @@ class GenericMapper(CameraMapper):
         removeKeyword(md, 'RADECSYS') # Irrelevant, and use of "GAPPT" breaks wcslib
         exp = exposureFromImage(image)
         return self._standardizeExposure(self.calibrations[detrend], exp, dataId, filter=filter, trimmed=False)
-
-    def std_bias(self, image, dataId):
-        return self._standardizeDetrend("bias", image, dataId, filter=False)
-
-    def std_dark(self, image, dataId):
-        return self._standardizeDetrend("dark", image, dataId, filter=False)
-
-    def std_flat(self, image, dataId):
-        return self._standardizeDetrend("flat", image, dataId, filter=True)
-
-    def std_fringe(self, image, dataId):
-        return self._standardizeDetrend("fringe", image, dataId, filter=True)
 
 
 def removeKeyword(md, key):
