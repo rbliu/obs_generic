@@ -60,16 +60,10 @@ class GenericMapper(CameraMapper):
         self.filterIdMap = dict(u=0, g=1, r=2, i=3, z=4, i2=5)
 
         # Ensure each dataset type of interest knows about the full range of keys available from the registry
-        keys = {'runId': str,
-                'object': str,
+        keys = {'source': str,
                 'visit': int,
                 'ccd': int,
-                'extension': int,
-                'state': str,
                 'filter': str,
-                'date': str,
-                'taiObs': str,
-                'expTime': float,
                 }
         for name in ("raw", "calexp", "postISRCCD", "src", "icSrc", "icMatch"):
             self.mappings[name].keyDict.update(keys)
@@ -131,13 +125,13 @@ class GenericMapper(CameraMapper):
 
     def _computeCcdExposureId(self, dataId):
         """Compute the 64-bit (long) identifier for a CCD exposure.
-
+            
         @param dataId (dict) Data identifier with visit, ccd
         """
         pathId = self._transformId(dataId)
         visit = long(pathId['visit'])
         ccd = long(pathId['ccd'])
-        return visit * 36 + ccd
+        return visit * 36 + ccd  # need to be modified?
 
     def bypass_ccdExposureId(self, datasetType, pythonType, location, dataId):
         """Hook to retrieve identifier for CCD"""
