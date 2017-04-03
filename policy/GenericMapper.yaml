@@ -19,37 +19,6 @@ exposures: {
 }
 
 datasets: {
-    deepCoaddId:
-        persistable: ignored
-        storage: ignored
-        python: lsst.daf.base.PropertySet
-        template: ignored
-    deepMergedCoaddId:
-        persistable: ignored
-        storage: ignored
-        python: lsst.daf.base.PropertySet
-        template: ignored
-    deepCoaddId_bits:
-        persistable: ignored
-        storage: ignored
-        python: lsst.daf.base.PropertySet
-        template: ignored
-    ccdExposureId:
-        persistable: ignored
-        storage: ignored
-        python: lsst.daf.base.PropertySet
-        template: ignored
-    deepMergedCoaddId_bits:
-        persistable: ignored
-        storage: ignored
-        python: lsst.daf.base.PropertySet
-        template: ignored
-    ccdExposureId_bits:
-        persistable: ignored
-        storage: ignored
-        python: lsst.daf.base.PropertySet
-        template: ignored
-
     deepDiff_metadata:
         template:      ''
     deepDiff_diaSrc:
