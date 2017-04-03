@@ -1,6 +1,13 @@
+_build.*
 *.dylib
 *.o
 *.os
 *.pyc
 *.so
-*/.DS_Store
+.DS_Store
+python/.DS_Store
+python/lsst/.DS_Store
+python/lsst/obs/.DS_Store
+python/lsst/obs/generic/.DS_Store
+tests/.tests
+ups/*.cfgc
