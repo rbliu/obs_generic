@@ -41,6 +41,7 @@ class GenericMapper(CameraMapper):
     def __init__(self, **kwargs):
         policyFile = pexPolicy.DefaultPolicyFile("obs_generic", "GenericMapper.paf", "policy")
         policy = pexPolicy.Policy(policyFile)
+        
         super(GenericMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
 
         # The "ccd" provided by the user is translated through the registry into an extension name for the "raw"
@@ -49,15 +50,16 @@ class GenericMapper(CameraMapper):
 
         self.exposures['raw'].keyDict['ccd'] = int
 
-        afwImageUtils.defineFilter('u',  lambdaEff=350)
+        # define filters?
+        #self.filterIdMap = dict(u=0, g=1, r=2, i=3, z=4, i2=5)
+        self.filterIdMap = dict(u=0, g=1, r=2, i=3, z=4)
+        
+        afwImageUtils.defineFilter('u',  lambdaEff=380)
         afwImageUtils.defineFilter('g',  lambdaEff=450)
         afwImageUtils.defineFilter('r',  lambdaEff=600)
-        afwImageUtils.defineFilter('i',  lambdaEff=750)
-        afwImageUtils.defineFilter('i2', lambdaEff=750)
+        afwImageUtils.defineFilter('i',  lambdaEff=770)
+        #afwImageUtils.defineFilter('i2', lambdaEff=750)
         afwImageUtils.defineFilter('z',  lambdaEff=900)
-
-        # define filters?
-        self.filterIdMap = dict(u=0, g=1, r=2, i=3, z=4, i2=5)
 
         # Ensure each dataset type of interest knows about the full range of keys available from the registry
         keys = {'source': str,
@@ -131,7 +133,7 @@ class GenericMapper(CameraMapper):
         pathId = self._transformId(dataId)
         visit = long(pathId['visit'])
         ccd = long(pathId['ccd'])
-        return visit * 36 + ccd  # need to be modified?
+        return visit * 36 + ccd  # TODO: need to be modified?
 
     def bypass_ccdExposureId(self, datasetType, pythonType, location, dataId):
         """Hook to retrieve identifier for CCD"""
