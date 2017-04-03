@@ -178,29 +178,6 @@ class GenericMapper(CameraMapper):
 
     bypass_deepMergedCoaddId_bits = bypass_CoaddExposureId_bits
 
-    def _computeStackExposureId(self, dataId):
-        """Compute the 64-bit (long) identifier for a Stack exposure.
-
-        @param dataId (dict) Data identifier with stack, patch, filter
-        """
-        nPatches = 1000000
-        return (long(dataId["stack"]) * nPatches + long(dataId["patch"]))
-
-    def bypass_stackExposureId(self, datasetType, pythonType, location, dataId):
-        """Hook to retrieve identifier for stack/coadd"""
-        return self._computeStackExposureId(dataId)
-
-    def bypass_stackExposureId_bits(self, datasetType, pythonType, location, dataId):
-        """Hook to retrieve number of bits in identifier for stack/coadd"""
-        return 32 # not really, but this leaves plenty of space for sources
-
-    def _standardizeDetrend(self, detrend, image, dataId, filter=False):
-        """Hack up detrend images to remove troublesome keyword"""
-        md = image.getMetadata()
-        removeKeyword(md, 'RADECSYS') # Irrelevant, and use of "GAPPT" breaks wcslib
-        exp = exposureFromImage(image)
-        return self._standardizeExposure(self.calibrations[detrend], exp, dataId, filter=filter, trimmed=False)
-
 
 def removeKeyword(md, key):
     """Remove a keyword from a header without raising an exception if it doesn't exist"""
