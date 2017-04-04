@@ -97,8 +97,6 @@ class GenericMapper(CameraMapper):
 
         raise RuntimeError("No defects for ccdSerial %s in %s" % (ccdSerial, defectsFitsPath))
 
-
-
     def _defectLookup(self, dataId):
         """Find the defects for a given CCD.
         @param dataId (dict) Dataset identifier
@@ -124,16 +122,18 @@ class GenericMapper(CameraMapper):
 
     def _extractDetectorName(self, dataId):
         return "ccd%02d" % dataId['ccd']
-
-    def _computeCcdExposureId(self, dataId):
+    
+    def _computeCcdExposureId(self, dataId): # TODO: need to be modified!
         """Compute the 64-bit (long) identifier for a CCD exposure.
             
-        @param dataId (dict) Data identifier with visit, ccd
+        @param dataId (dict) Data identifier with source, visit, ccd
         """
         pathId = self._transformId(dataId)
+        telescope = {'cfht':'0' , 'decam':'1' , 'hsc':'2' , 'suprime':'3' , 'sdss':'4' , 'wiyn':'5' , 'comCam':'6' , 'nano_mosaic':'7' ,  'monocam':'8' , 'lsstSim':'9'}
+        source = long(telescope[pathId['source']])
         visit = long(pathId['visit'])
         ccd = long(pathId['ccd'])
-        return visit * 36 + ccd  # TODO: need to be modified!
+        return visit * 1000 + source * 100 + ccd
 
     def bypass_ccdExposureId(self, datasetType, pythonType, location, dataId):
         """Hook to retrieve identifier for CCD"""
