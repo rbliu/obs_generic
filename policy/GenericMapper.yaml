@@ -1,13 +1,13 @@
-exposures: {
+exposures:
     deepDiff_differenceExp:
-        template:      'deepDiff/%(source)s/v%(visit)d/diffexp-%(ccd)d.fits'
+        template: 'deepDiff/%(source)s/v%(visit)d/diffexp-%(ccd)d.fits'
     deepDiff_matchedExp:
-        template:      'deepDiff/%(source)s/v%(visit)d/matchexp-%(ccd)d.fits'
+        template: 'deepDiff/%(source)s/v%(visit)d/matchexp-%(ccd)d.fits'
     deepCoadd_tempExp:
-        template:    'deepCoadd/%(source)s/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-%(filter)s.fits'
+        template: 'deepCoadd/%(source)s/%(filter)s/%(tract)d/%(patch)stempExp/v%(visit)d-%(filter)s.fits'
 
     postISRCCD:
-        template: 'postISR/%(source)s/v%(visit)d/postISR-%(visit)d_%(ccd)d.fits'
+        template: 'postISR/%(source)s/v%(visit)08d/postISR-%(visit)08d_%(ccd)03d.fits'
     calexp:
         template: 'calexp/%(source)s/v%(visit)d/calexp-%(visit)d_%(ccd)d.fits'
     raw:
@@ -16,15 +16,15 @@ exposures: {
         template: 'calexp/%(source)s/v%(visit)d/wcs-%(visit)d_%(ccd)d.fits'
     icExp:
         template: 'icExp/%(source)s/v%(visit)d/icExp-%(visit)d_%(ccd)d.fits'
-}
 
-datasets: {
+
+datasets:
     deepDiff_metadata:
-        template:      'deepDiff/%(source)s/v%(visit)d/metadata-%(ccd)d.boost'
+        template: 'deepDiff/%(source)s/v%(visit)d/metadata-%(ccd)d.boost'
     deepDiff_diaSrc:
-        template:      'deepDiff/%(source)s/v%(visit)d/diaSrc-%(ccd)d.fits'
+        template: 'deepDiff/%(source)s/v%(visit)d/diaSrc-%(ccd)d.fits'
     deepDiff_kernelSrc:
-        template:      'deepDiff/%(source)s/v%(visit)d/kernelSrc-%(ccd)d.fits'
+        template: 'deepDiff/%(source)s/v%(visit)d/kernelSrc-%(ccd)d.fits'
 
     isr_metadata:
         template: 'metadata/%(source)s/v%(visit)d/metadata-%(visit)d_%(ccd)d.boost'
@@ -36,7 +36,7 @@ datasets: {
     processCcd_metadata:
         template: 'metadata/%(source)s/v%(visit)d/metadata-%(visit)d_%(ccd)d.boost'
     characterizeImage_metadata:
-        template: 'metadata/%(source)s/v%(visit)d/metadata-%(visit)d_%(ccd)d.boost'
+       template: 'metadata/%(source)s/v%(visit)d/metadata-%(visit)d_%(ccd)d.boost'
     calibrate_metadata:
         template: 'metadata/%(source)s/v%(visit)d/metadata-%(visit)d_%(ccd)d.boost'
 
@@ -48,6 +48,8 @@ datasets: {
         template: 'src/%(source)s/v%(visit)d/src-%(visit)d_%(ccd)d.fits'
     calexpBackground:
         template: 'calexp/%(source)s/v%(visit)d/bkgd/bkgd-%(visit)d_%(ccd)d.fits'
+    icMatch:
+        template: 'icMatch/%(source)s/v%(visit)d/%(filter)s/ICMATCH-%(visit)d_%(ccd)d.fits'
     srcMatch:
         template: 'srcMatch/%(source)s/v%(visit)d/srcMatch-%(visit)d_%(ccd)d.fits'
     srcMatchFull:  # Denormalized matches from CalibrateTask
@@ -57,4 +59,3 @@ datasets: {
         template: 'deepCoadd-results/%(source)s/%(filter)s/%(tract)d/%(patch)s/srcMatch-%(filter)s-%(tract)d-%(patch)s.fits'
     deepCoadd_measMatchFull:  # Denormalized matches from MeasureMergedCoaddSourcesTask
         template: 'deepCoadd-results/%(source)s/%(filter)s/%(tract)d/%(patch)s/srcMatchFull-%(filter)s-%(tract)d-%(patch)s.fits'
-}

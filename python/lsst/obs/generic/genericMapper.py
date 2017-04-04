@@ -68,7 +68,7 @@ class GenericMapper(CameraMapper):
         keys = {'source': str,
                 'visit': int,
                 'ccd': int,
-                'filter': str,
+                #'filter': str,
                 }
         for name in ("raw", "calexp", "postISRCCD", "src", "icSrc", "icMatch"):
             self.mappings[name].keyDict.update(keys)
@@ -87,7 +87,7 @@ class GenericMapper(CameraMapper):
         source = long(telescope[pathId['source']])
         visit = long(pathId['visit'])
         ccd = long(pathId['ccd'])
-        return source * 10000000000000 + visit * 10000 + ccd
+        return source * 1000000000000 + visit * 1000 + ccd
 
     def bypass_ccdExposureId(self, datasetType, pythonType, location, dataId):
         """Hook to retrieve identifier for CCD"""
@@ -95,7 +95,7 @@ class GenericMapper(CameraMapper):
 
     def bypass_ccdExposureId_bits(self, datasetType, pythonType, location, dataId):
         """Hook to retrieve number of bits in identifier for CCD"""
-        return 49
+        return 43
     
     def _computeCoaddExposureId(self, dataId, singleFilter):
         """Compute the 64-bit (long) identifier for a coadd.
@@ -131,6 +131,18 @@ class GenericMapper(CameraMapper):
         return self._computeCoaddExposureId(dataId, False)
 
     bypass_deepMergedCoaddId_bits = bypass_CoaddExposureId_bits
+
+    def _makeCamera(self, policy, repositoryDir):
+        return None
+
+    def _setAmpDetector(self, item, dataId, trimmed):
+        return None
+
+    def _setCcdDetector(self, item, dataId, trimmed):
+        return None
+
+    def _setFilter(self, mapping, item, dataId):
+        return None
 
 
 def removeKeyword(md, key):

@@ -27,7 +27,7 @@ import lsst.pex.config as pexConfig
 
 
 class GenericNullIsrConfig(pexConfig.Config):
-    pass
+    datasetType = "postISRCCD"
 
 ## \addtogroup LSST_task_documentation
 ## \{
