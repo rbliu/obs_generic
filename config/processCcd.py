@@ -1,13 +1,10 @@
 import os.path
-
 from lsst.utils import getPackageDir
 
-cfhtConfigDir = os.path.join(getPackageDir("obs_cfht"), "config")
-config.calibrate.photoCal.colorterms.load(os.path.join(cfhtConfigDir, 'colorterms.py'))
+from lsst.obs.generic.genericNullIsr import GenericNullIsrTask
+config.isr.retarget(GenericNullIsrTask)
 
-from lsst.obs.cfht.cfhtIsrTask import CfhtIsrTask
-config.isr.retarget(CfhtIsrTask)
-
+"""
 config.isr.doBias = False
 config.isr.doDark = False
 config.isr.doFlat = False
@@ -45,3 +42,4 @@ except :
 
 config.calibrate.photoCal.applyColorTerms = True
 config.calibrate.photoCal.photoCatName="e2v"
+"""
