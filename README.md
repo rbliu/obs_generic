@@ -37,14 +37,18 @@ Things we would Like obs_generic to do, but are hard with current packages:
 
 - [x] Straightforward renaming
 
-- [x] What fields should go in registry (and which are required vs optional): visit, sensor, source, filter, date/time,
+- [x] What fields should go in registry (and which are required vs optional): visit, sensor, source, filter, date/time
 
 - [x] Function to add something to registry
 
 - [x] Update mapper policy to use new keys
 
-- [x] Write dummy ISR Task(s) that mangles actually-processed "raw" images into the postIsrCcd Exposures the stack expects.
+- [x] Write dummy ISR Task(s) that mangles actually-processed "raw" images into the postIsrCcd Exposures the stack expects
 
 - [x] Fix up configuration defaults.
 
-- [ ] Remove the CameraGeom; Test and see what breaks
+- [x] Remove the CameraGeom; Test and see what breaks
+
+- [ ] Transform/copy CFHT & DECam postISR images to the expected directory with correct file name
+
+- [ ] Re-enable _ _setFilter _ function in genericMapper.py
