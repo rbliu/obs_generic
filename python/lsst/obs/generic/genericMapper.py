@@ -73,66 +73,17 @@ class GenericMapper(CameraMapper):
         for name in ("raw", "calexp", "postISRCCD", "src", "icSrc", "icMatch"):
             self.mappings[name].keyDict.update(keys)
 
-    def bypass_defects(self, datasetType, pythonType, butlerLocation, dataId):
-        """Return a defect based on the butler location returned by map_defects
-
-        @param[in] butlerLocation: a ButlerLocation with locationList = path to defects FITS file
-        @param[in] dataId: the usual data ID; "ccd" must be set
-
-        Note: the name "bypass_XXX" means the butler makes no attempt to convert the ButlerLocation
-        into an object, which is what we want for now, since that conversion is a bit tricky.
-        """
-        (ccdKey, ccdSerial) = self._getCcdKeyVal(dataId)
-        defectsFitsPath = butlerLocation.locationList[0]
-        with pyfits.open(defectsFitsPath) as hduList:
-            for hdu in hduList[1:]:
-                if str(hdu.header["SERIAL"]) != ccdSerial:
-                    continue
-
-                defectList = []
-                for data in hdu.data:
-                    bbox = afwGeom.Box2I(
-                        afwGeom.Point2I(int(data['x0']), int(data['y0'])),
-                        afwGeom.Extent2I(int(data['width']), int(data['height'])),
-                    )
-                    defectList.append(afwImage.DefectBase(bbox))
-                return defectList
-
-        raise RuntimeError("No defects for ccdSerial %s in %s" % (ccdSerial, defectsFitsPath))
-
-    def _defectLookup(self, dataId):
-        """Find the defects for a given CCD.
-        @param dataId (dict) Dataset identifier
-        @return (string) path to the defects file or None if not available"""
-
-        if self.registry is None:
-            raise RuntimeError, "No registry for defect lookup"
-
-        rows = self.registry.executeQuery(("defects",), ("raw",),
-                [("visit", "?"),("ccd", "?")], None, (dataId['visit'], dataId['ccd']))
-        if len(rows) == 0:
-            return None
-
-        if len(rows) == 1:
-            return os.path.join(self.defectPath, rows[0][0])
-        else:
-            raise RuntimeError("Querying for defects (%s) returns %d files: %s" %
-                               (dataId['id'], len(rows), ", ".join([_[0] for _ in rows])))
-
-    def _getCcdKeyVal(self, dataId):
-        ccdName = self._extractDetectorName(dataId)
-        return ("ccdSerial", self.camera[ccdName].getSerial())
 
     def _extractDetectorName(self, dataId):
         return "ccd%02d" % dataId['ccd']
     
-    def _computeCcdExposureId(self, dataId): # TODO: need to be modified!
+    def _computeCcdExposureId(self, dataId):
         """Compute the 64-bit (long) identifier for a CCD exposure.
             
         @param dataId (dict) Data identifier with source, visit, ccd
         """
         pathId = self._transformId(dataId)
-        telescope = {'lsstSim':'0', 'lsst':'1', 'cfht':'2', 'decam':'3', 'hsc':'4', 'suprime':'5', 'sdss':'6', 'ctio':'7', 'wiyn':'8', 'comCam':'9', 'nano_mosaic':'10',  'monocam':'11'}
+        telescope = {'lsstSim':'0', 'lsst':'1', 'cfht':'2', 'decam':'3', 'hsc':'4', 'suprime':'5', 'sdss':'6', 'ctio':'7', 'wiyn':'8', 'kpno':'9', 'comCam':'10', 'nano_mosaic':'11',  'monocam':'12'}
         source = long(telescope[pathId['source']])
         visit = long(pathId['visit'])
         ccd = long(pathId['ccd'])
@@ -144,8 +95,8 @@ class GenericMapper(CameraMapper):
 
     def bypass_ccdExposureId_bits(self, datasetType, pythonType, location, dataId):
         """Hook to retrieve number of bits in identifier for CCD"""
-        return 64
-
+        return 49
+    
     def _computeCoaddExposureId(self, dataId, singleFilter):
         """Compute the 64-bit (long) identifier for a coadd.
 
