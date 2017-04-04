@@ -20,6 +20,7 @@
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
+# This file was originally copied from obs_cfht.
 import os
 
 import pyfits
@@ -30,6 +31,7 @@ import lsst.afw.image.utils as afwImageUtils
 
 from lsst.obs.base import CameraMapper, exposureFromImage
 import lsst.pex.policy as pexPolicy
+from lsst.daf.persistence import ButlerLocation, Policy
 
 # Solely to get boost serialization registrations for Measurement subclasses
 import lsst.meas.algorithms  # flake8: noqa
@@ -38,9 +40,12 @@ class GenericMapper(CameraMapper):
     packageName = "obs_generic"
 
     def __init__(self, **kwargs):
-        policyFile = pexPolicy.DefaultPolicyFile("obs_cfht", "GenericMapper.paf", "policy")
-        policy = pexPolicy.Policy(policyFile)
-        super(MegacamMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
+        policyFile = Policy.defaultPolicyFile("obs_generic", "GenericMapper.yaml", "policy")
+        #policy = pexPolicy.Policy(policyFile)
+        policy = Policy(policyFile)
+        
+        #super(GenericMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
+        super(GenericMapper, self).__init__(policy, os.path.dirname(policyFile), **kwargs)
 
         # The "ccd" provided by the user is translated through the registry into an extension name for the "raw"
         # template.  The template therefore doesn't include "ccd", so we need to ensure it's explicitly included
@@ -48,95 +53,41 @@ class GenericMapper(CameraMapper):
 
         self.exposures['raw'].keyDict['ccd'] = int
 
-        afwImageUtils.defineFilter('u',  lambdaEff=350, alias="u.MP9301")
-        afwImageUtils.defineFilter('g',  lambdaEff=450, alias="g.MP9401")
-        afwImageUtils.defineFilter('r',  lambdaEff=600, alias="r.MP9601")
-        afwImageUtils.defineFilter('i',  lambdaEff=750, alias="i.MP9701")
-        afwImageUtils.defineFilter('i2', lambdaEff=750, alias="i.MP9702")
-        afwImageUtils.defineFilter('z',  lambdaEff=900, alias="z.MP9801")
-
         # define filters?
-        self.filterIdMap = dict(u=0, g=1, r=2, i=3, z=4, i2=5)
+        #self.filterIdMap = dict(u=0, g=1, r=2, i=3, z=4, i2=5)
+        self.filterIdMap = dict(u=0, g=1, r=2, i=3, z=4)
+        
+        afwImageUtils.defineFilter('u',  lambdaEff=380)
+        afwImageUtils.defineFilter('g',  lambdaEff=450)
+        afwImageUtils.defineFilter('r',  lambdaEff=600)
+        afwImageUtils.defineFilter('i',  lambdaEff=770)
+        #afwImageUtils.defineFilter('i2', lambdaEff=750)
+        afwImageUtils.defineFilter('z',  lambdaEff=900)
 
         # Ensure each dataset type of interest knows about the full range of keys available from the registry
-        keys = {'runId': str,
-                'object': str,
+        keys = {'source': str,
                 'visit': int,
                 'ccd': int,
-                'extension': int,
-                'state': str,
                 'filter': str,
-                'date': str,
-                'taiObs': str,
-                'expTime': float,
                 }
         for name in ("raw", "calexp", "postISRCCD", "src", "icSrc", "icMatch"):
             self.mappings[name].keyDict.update(keys)
 
-    def bypass_defects(self, datasetType, pythonType, butlerLocation, dataId):
-        """Return a defect based on the butler location returned by map_defects
-
-        @param[in] butlerLocation: a ButlerLocation with locationList = path to defects FITS file
-        @param[in] dataId: the usual data ID; "ccd" must be set
-
-        Note: the name "bypass_XXX" means the butler makes no attempt to convert the ButlerLocation
-        into an object, which is what we want for now, since that conversion is a bit tricky.
-        """
-        (ccdKey, ccdSerial) = self._getCcdKeyVal(dataId)
-        defectsFitsPath = butlerLocation.locationList[0]
-        with pyfits.open(defectsFitsPath) as hduList:
-            for hdu in hduList[1:]:
-                if str(hdu.header["SERIAL"]) != ccdSerial:
-                    continue
-
-                defectList = []
-                for data in hdu.data:
-                    bbox = afwGeom.Box2I(
-                        afwGeom.Point2I(int(data['x0']), int(data['y0'])),
-                        afwGeom.Extent2I(int(data['width']), int(data['height'])),
-                    )
-                    defectList.append(afwImage.DefectBase(bbox))
-                return defectList
-
-        raise RuntimeError("No defects for ccdSerial %s in %s" % (ccdSerial, defectsFitsPath))
-
-
-
-    def _defectLookup(self, dataId):
-        """Find the defects for a given CCD.
-        @param dataId (dict) Dataset identifier
-        @return (string) path to the defects file or None if not available"""
-
-        if self.registry is None:
-            raise RuntimeError, "No registry for defect lookup"
-
-        rows = self.registry.executeQuery(("defects",), ("raw",),
-                [("visit", "?"),("ccd", "?")], None, (dataId['visit'], dataId['ccd']))
-        if len(rows) == 0:
-            return None
-
-        if len(rows) == 1:
-            return os.path.join(self.defectPath, rows[0][0])
-        else:
-            raise RuntimeError("Querying for defects (%s) returns %d files: %s" %
-                               (dataId['id'], len(rows), ", ".join([_[0] for _ in rows])))
-
-    def _getCcdKeyVal(self, dataId):
-        ccdName = self._extractDetectorName(dataId)
-        return ("ccdSerial", self.camera[ccdName].getSerial())
 
     def _extractDetectorName(self, dataId):
         return "ccd%02d" % dataId['ccd']
-
+    
     def _computeCcdExposureId(self, dataId):
         """Compute the 64-bit (long) identifier for a CCD exposure.
-
-        @param dataId (dict) Data identifier with visit, ccd
+            
+        @param dataId (dict) Data identifier with source, visit, ccd
         """
         pathId = self._transformId(dataId)
+        telescope = {'lsstSim':'0', 'lsst':'1', 'cfht':'2', 'decam':'3', 'hsc':'4', 'suprime':'5', 'sdss':'6', 'ctio':'7', 'wiyn':'8', 'kpno':'9', 'comCam':'10', 'nano_mosaic':'11',  'monocam':'12'}
+        source = long(telescope[pathId['source']])
         visit = long(pathId['visit'])
         ccd = long(pathId['ccd'])
-        return visit * 36 + ccd
+        return source * 10000000000000 + visit * 10000 + ccd
 
     def bypass_ccdExposureId(self, datasetType, pythonType, location, dataId):
         """Hook to retrieve identifier for CCD"""
@@ -144,8 +95,8 @@ class GenericMapper(CameraMapper):
 
     def bypass_ccdExposureId_bits(self, datasetType, pythonType, location, dataId):
         """Hook to retrieve number of bits in identifier for CCD"""
-        return 32
-
+        return 49
+    
     def _computeCoaddExposureId(self, dataId, singleFilter):
         """Compute the 64-bit (long) identifier for a coadd.
 
@@ -180,41 +131,6 @@ class GenericMapper(CameraMapper):
         return self._computeCoaddExposureId(dataId, False)
 
     bypass_deepMergedCoaddId_bits = bypass_CoaddExposureId_bits
-
-    def _computeStackExposureId(self, dataId):
-        """Compute the 64-bit (long) identifier for a Stack exposure.
-
-        @param dataId (dict) Data identifier with stack, patch, filter
-        """
-        nPatches = 1000000
-        return (long(dataId["stack"]) * nPatches + long(dataId["patch"]))
-
-    def bypass_stackExposureId(self, datasetType, pythonType, location, dataId):
-        """Hook to retrieve identifier for stack/coadd"""
-        return self._computeStackExposureId(dataId)
-
-    def bypass_stackExposureId_bits(self, datasetType, pythonType, location, dataId):
-        """Hook to retrieve number of bits in identifier for stack/coadd"""
-        return 32 # not really, but this leaves plenty of space for sources
-
-    def _standardizeDetrend(self, detrend, image, dataId, filter=False):
-        """Hack up detrend images to remove troublesome keyword"""
-        md = image.getMetadata()
-        removeKeyword(md, 'RADECSYS') # Irrelevant, and use of "GAPPT" breaks wcslib
-        exp = exposureFromImage(image)
-        return self._standardizeExposure(self.calibrations[detrend], exp, dataId, filter=filter, trimmed=False)
-
-    def std_bias(self, image, dataId):
-        return self._standardizeDetrend("bias", image, dataId, filter=False)
-
-    def std_dark(self, image, dataId):
-        return self._standardizeDetrend("dark", image, dataId, filter=False)
-
-    def std_flat(self, image, dataId):
-        return self._standardizeDetrend("flat", image, dataId, filter=True)
-
-    def std_fringe(self, image, dataId):
-        return self._standardizeDetrend("fringe", image, dataId, filter=True)
 
 
 def removeKeyword(md, key):
