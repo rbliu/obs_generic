@@ -26,7 +26,7 @@ import lsst.pipe.base as pipeBase
 import lsst.pex.config as pexConfig
 
 
-class DecamNullIsrConfig(pexConfig.Config):
+class GenericNullIsrConfig(pexConfig.Config):
     pass
 
 ## \addtogroup LSST_task_documentation
@@ -83,8 +83,6 @@ class GenericNullIsrTask(pipeBase.Task):
         self.log.info("Loading a post-ISR image file %s" % (sensorRef.dataId))
 
         exposure = sensorRef.get("postISRCCD", immediate=True)
-        if self.config.doWrite:
-            sensorRef.put("postISRCCD", exposure)
 
         return pipeBase.Struct(
             exposure=exposure,
