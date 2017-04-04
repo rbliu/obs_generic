@@ -31,6 +31,7 @@ import lsst.afw.image.utils as afwImageUtils
 
 from lsst.obs.base import CameraMapper, exposureFromImage
 import lsst.pex.policy as pexPolicy
+from lsst.daf.persistence import ButlerLocation, Policy
 
 # Solely to get boost serialization registrations for Measurement subclasses
 import lsst.meas.algorithms  # flake8: noqa
@@ -39,10 +40,12 @@ class GenericMapper(CameraMapper):
     packageName = "obs_generic"
 
     def __init__(self, **kwargs):
-        policyFile = pexPolicy.DefaultPolicyFile("obs_generic", "GenericMapper.paf", "policy")
-        policy = pexPolicy.Policy(policyFile)
+        policyFile = Policy.defaultPolicyFile("obs_generic", "GenericMapper.yaml", "policy")
+        #policy = pexPolicy.Policy(policyFile)
+        policy = Policy(policyFile)
         
-        super(GenericMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
+        #super(GenericMapper, self).__init__(policy, policyFile.getRepositoryPath(), **kwargs)
+        super(GenericMapper, self).__init__(policy, os.path.dirname(policyFile), **kwargs)
 
         # The "ccd" provided by the user is translated through the registry into an extension name for the "raw"
         # template.  The template therefore doesn't include "ccd", so we need to ensure it's explicitly included
