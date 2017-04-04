@@ -27,7 +27,7 @@ import lsst.pex.config as pexConfig
 
 
 class DecamNullIsrConfig(pexConfig.Config):
-
+    pass
 
 ## \addtogroup LSST_task_documentation
 ## \{
