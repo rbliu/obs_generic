@@ -26,8 +26,7 @@ import lsst.pipe.base as pipeBase
 import lsst.pex.config as pexConfig
 
 
-class GenericNullIsrConfig(pexConfig.Config):
-    doWrite = pexConfig.Field()
+class DecamNullIsrConfig(pexConfig.Config):
 
 
 ## \addtogroup LSST_task_documentation
