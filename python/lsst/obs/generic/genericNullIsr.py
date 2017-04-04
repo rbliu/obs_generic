@@ -25,19 +25,10 @@ from __future__ import absolute_import, division, print_function
 import lsst.pipe.base as pipeBase
 import lsst.pex.config as pexConfig
 
-"""
-class DecamNullIsrConfig(pexConfig.Config):
-    doWrite = pexConfig.Field(
-        dtype=bool,
-        doc="Persist loaded data as a postISRCCD? The default is false, to avoid duplicating data.",
-        default=False,
-    )
-    datasetType = pexConfig.Field(
-        dtype=str,
-        doc="Dataset type for input data; read by ProcessCcdTask; users will typically leave this alone",
-        default="instcal",
-    )
-"""
+
+class GenericNullIsrConfig(pexConfig.Config):
+    doWrite = pexConfig.Field()
+
 
 ## \addtogroup LSST_task_documentation
 ## \{
