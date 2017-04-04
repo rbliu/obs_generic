@@ -49,6 +49,6 @@ Things we would Like obs_generic to do, but are hard with current packages:
 
 - [x] Remove the CameraGeom; Test and see what breaks
 
-- [ ] Transform/copy CFHT & DECam postISR images to the expected directory with correct file name
+- [ ] Transform/copy CFHT & DECam postISR images to the expected directory with correct file names
 
-- [ ] Re-enable _ _setFilter _ function in genericMapper.py
+- [ ] Re-enable _setFilter function in genericMapper.py
