@@ -132,11 +132,11 @@ class GenericMapper(CameraMapper):
         @param dataId (dict) Data identifier with source, visit, ccd
         """
         pathId = self._transformId(dataId)
-        telescope = {'cfht':'0' , 'decam':'1' , 'hsc':'2' , 'suprime':'3' , 'sdss':'4' , 'wiyn':'5' , 'comCam':'6' , 'nano_mosaic':'7' ,  'monocam':'8' , 'lsstSim':'9'}
+        telescope = {'lsstSim':'0', 'lsst':'1', 'cfht':'2', 'decam':'3', 'hsc':'4', 'suprime':'5', 'sdss':'6', 'ctio':'7', 'wiyn':'8', 'comCam':'9', 'nano_mosaic':'10',  'monocam':'11'}
         source = long(telescope[pathId['source']])
         visit = long(pathId['visit'])
         ccd = long(pathId['ccd'])
-        return visit * 1000 + source * 100 + ccd
+        return source * 10000000000000 + visit * 10000 + ccd
 
     def bypass_ccdExposureId(self, datasetType, pythonType, location, dataId):
         """Hook to retrieve identifier for CCD"""
@@ -144,7 +144,7 @@ class GenericMapper(CameraMapper):
 
     def bypass_ccdExposureId_bits(self, datasetType, pythonType, location, dataId):
         """Hook to retrieve number of bits in identifier for CCD"""
-        return 32
+        return 64
 
     def _computeCoaddExposureId(self, dataId, singleFilter):
         """Compute the 64-bit (long) identifier for a coadd.
