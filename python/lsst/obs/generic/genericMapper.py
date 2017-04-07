@@ -63,6 +63,9 @@ class GenericMapper(CameraMapper):
         afwImageUtils.defineFilter('i',  lambdaEff=770)
         #afwImageUtils.defineFilter('i2', lambdaEff=750)
         afwImageUtils.defineFilter('z',  lambdaEff=900)
+        afwImageUtils.defineFilter('decam_u', lambdaEff=350, alias=['u DECam c0006 3500.0 1000.0', 'u'])
+        
+        
 
         # Ensure each dataset type of interest knows about the full range of keys available from the registry
         keys = {'source': str,
@@ -83,7 +86,7 @@ class GenericMapper(CameraMapper):
         @param dataId (dict) Data identifier with source, visit, ccd
         """
         pathId = self._transformId(dataId)
-        telescope = {'lsstSim':'0', 'lsst':'1', 'cfht':'2', 'decam':'3', 'hsc':'4', 'suprime':'5', 'sdss':'6', 'ctio':'7', 'wiyn':'8', 'kpno':'9', 'comCam':'10', 'nano_mosaic':'11',  'monocam':'12'}
+        telescope = {'lsstSim':'0', 'lsst':'1', 'cfht':'2', 'decam':'3', 'hsc':'4', 'suprime':'5', 'sdss':'6', 'ctio':'7', 'wiyn':'8', 'kpno':'9', 'comCam':'10', 'dls':'11',  'monocam':'12'}
         source = long(telescope[pathId['source']])
         visit = long(pathId['visit'])
         ccd = long(pathId['ccd'])
@@ -142,6 +145,9 @@ class GenericMapper(CameraMapper):
         return None
 
     def _setFilter(self, mapping, item, dataId):
+#        filter_header_string = item.getMetadata().get("FILTER")
+#        import pdb
+#        pdb.set_trace()
         return None
 
 
