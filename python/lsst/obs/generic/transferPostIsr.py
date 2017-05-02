@@ -1,9 +1,10 @@
 # obs_generic
 #
-# This task aims to transfer the post-ISR images to a correct Butler-style path with an appropriate filename.
 # Before running processCcd.py with obs_generic, the post-ISR image must be put under the directory
 # ./postISR/%(source)s/v%(visit)08d/postISR-%(visit)08d_%(ccd)03d.fits
-# This piece of code aims to create a soft link of the post-ISR image such that the pipeline can access to it.
+#
+# This piece of code aims to create a copy of the post-ISR image (ccd) with appropriate filename
+# such that the pipeline can access to it.
 #
 # Usage:
 # transferPostIsr.py <post-ISR image.fits> --source <source name> --visit <visit num> --ccd <ccd num>
@@ -50,30 +51,48 @@ def transferPostIsr(file, source, visit, ccd):
                 if not os.path.isdir(outpath):
                     raise
 
-#       os.symlink(os.path.abspath(file), outfile)
-        original_fits = pyfits.open(os.path.abspath(file))
-        original_data = original_fits[1].data
+        if source=='decam':
 
-        def getVar(data):
-        # estimate variance (rsead out noise + sky photon noise)
-        # from edges of the frame
-            pad = 10
-            var = np.var(np.concatenate((
+    #       os.symlink(os.path.abspath(file), outfile)
+            original_fits = pyfits.open(os.path.abspath(file))
+            original_data = original_fits[1].data
+        
+            print(original_fits[0].header['FILTER'])
+
+            def getVar(data):
+            # estimate variance (read out noise + sky photon noise)
+            # from edges of the frame
+                pad = 10
+                var = np.var(np.concatenate((
                                          data[:pad,:].flatten(),
                                          data[:,:pad].flatten(),
                                          data[-pad:,:].flatten(),
                                          data[:,-pad:].flatten() )))
-            return var
+                return var
 
-        hdr = afwImg.readMetadata(file)
-        wcs = afwImg.makeWcs(hdr)
+            hdr = afwImg.readMetadata(file)
+            wcs = afwImg.makeWcs(hdr)
 
-        exposure = lsst.afw.image.ExposureF(original_data.shape[1], original_data.shape[0])
-        exposure.getMaskedImage().getImage().getArray()[:,:] = original_data
-        exposure.getMaskedImage().getVariance().getArray()[:,:] = getVar(original_data)
-        exposure.setWcs(wcs)
+            exposure = lsst.afw.image.ExposureF(original_data.shape[1], original_data.shape[0])
+            exposure.getMaskedImage().getImage().getArray()[:,:] = original_data
+            exposure.getMaskedImage().getVariance().getArray()[:,:] = getVar(original_data)
+            exposure.setWcs(wcs)
 
-        exposure.writeFits(outfile)
+            exposure.writeFits(outfile)
+        
+            out_fits = pyfits.open(outfile, mode='update')
+            prihdr = out_fits[0].header
+            prihdr['FILTER'] = 'decam_z'
+            out_fits.flush()
+            out_fits.close()
+
+        elif source=='cfht':
+
+            os.symlink(os.path.abspath(file), outfile)
+
+        else:
+
+            os.symlink(os.path.abspath(file), outfile)
 
         print(os.path.abspath(file) + '  <-->  ' + outfile + "\n")
 
