@@ -53,7 +53,7 @@ def transferPostIsr(file, source, visit, ccd):
 
         if source=='decam':
 
-    #       os.symlink(os.path.abspath(file), outfile)
+            #os.symlink(os.path.abspath(file), outfile)
             original_fits = pyfits.open(os.path.abspath(file))
             original_data = original_fits[1].data
         

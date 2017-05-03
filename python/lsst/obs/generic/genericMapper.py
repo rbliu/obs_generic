@@ -150,6 +150,11 @@ class GenericMapper(CameraMapper):
 #        pdb.set_trace()
         return None
 
+#   The mapperClass cannot be a 'NoneType' object
+    @classmethod
+    def getCameraName(cls):
+        return "generic"
+
 
 def removeKeyword(md, key):
     """Remove a keyword from a header without raising an exception if it doesn't exist"""
