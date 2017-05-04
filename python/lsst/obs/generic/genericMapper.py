@@ -29,7 +29,8 @@ import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
 import lsst.afw.image.utils as afwImageUtils
 
-from lsst.obs.base import CameraMapper, exposureFromImage
+#from lsst.obs.base import CameraMapper, exposureFromImage
+from lsst.daf.butlerUtils import CameraMapper, exposureFromImage
 import lsst.pex.policy as pexPolicy
 from lsst.daf.persistence import ButlerLocation, Policy
 
