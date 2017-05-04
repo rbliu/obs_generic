@@ -21,3 +21,4 @@
 #
 from .version import *
 from genericMapper import *
+from transferPostIsr import *
