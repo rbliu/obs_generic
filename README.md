@@ -51,4 +51,6 @@ Things we would Like obs_generic to do, but are hard with current packages:
 
 - [ ] Transform/copy CFHT & DECam postISR images to the expected directory with correct file names
 
+- [ ] Translate the filter names of DECam postISR images
+
 - [ ] Re-enable _setFilter function in genericMapper.py
